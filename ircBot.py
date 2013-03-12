@@ -61,8 +61,7 @@ class ircBot(ircConnection):
             pidtLog = open("pidt","w")
             pidtLog.write(str(os.getpid()))
             pidtLog.close()
-            os.system("top -p "+str(os.getpid())
-            +" -b -n 1 | tail -n 1 >> webLog") #I know it's bad pratice shut up ok it's mainly a debug thing anyway
+            os.system("top -p "+str(os.getpid())+" -b -n 1 | tail -n 1 >> webLog") #I know it's bad pratice shut up ok it's mainly a debug thing anyway
         elif command == "JOIN":
             if prefix[0] == self.NICK:
                 self[params[0]] = channel(self,params[0])
