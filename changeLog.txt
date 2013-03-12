@@ -1,0 +1,152 @@
+TODO:
+	Channel infomation saving
+	Channel flags
+	Advance trains function
+
+0.11.2
+	TECHNICAL
+		Changed how messages are printed to the console.
+		Fixed bug with flood protection
+	
+0.11.1
+	TECHNICAL
+		Added channel's +s flag which controls if muffinMare uses PRIVMSG in that channel or not (muffinMare uses NOTICE in channels she is not in / To users)
+	
+0.11.0
+	SENT UPDATE TO HOST
+	
+0.10.4
+	COMMANDS
+		Changed the paramater ordering on !admin
+		ADMIN is now FLAGS
+		Added +r flag to channel to make users require voice
+		Added +f[time] +v[time] +o[time] flags to channels to control flood timers
+		Changed the pointer selection for flags/admin:
+			 #   - current channel
+			 #X  - channel X
+			Y    - user Y in current channel
+			Y#   - as above
+			Y#X  - user Y in channel X
+			BOT  - Flags for the bot
+	MISC
+		muffinMare now responds to her name with random comments
+	TECHNICAL
+		KeyboardInterrupt now poses the question to exit, then correctlly shuts muffinMare down
+		Added flag get/set ability for channels
+		Allowed admin control to point to the bot when bot is given insted of a channel (currently does nothing)
+		Changed admin control to FLAGS
+		Added the need stuff for the +r flag
+		
+	
+0.10.3
+	COMMANDS
+		added youtube command
+	TECHNICAL
+		added muffinMare.py/youtube(...,query) for youtube command
+	MISC
+		added more muffins
+
+0.10.1
+	TECHNICAL
+		muffinMare now response to CTCP VERSION commands
+
+0.10.0
+	COMMANDS
+		(ext)log removed.
+	TECHNICAL
+		Removal of logging system - buggy and obselete
+
+0.9.2
+    COMMANDS
+        Added mcCheck
+    TECHNICAL
+        import socket added
+
+0.9.0
+    COMMANDS
+        Added c (calc)
+
+0.8.6
+    TECHNICAL
+        Added april fools joke (scrabled text)
+0.8.5
+    COMMANDS
+        Added link to aboutMuffinmare.html in about
+        Shortened links in about
+0.8.4
+    TECHNICAL
+        Added ircBot.py/noUserException & noChannelException
+        Added Try Catch around mode handling in ircBot.py/channel.nickHandler
+
+0.8.3
+    TECHNICAL
+        Added __getitem__ ect to channels and ircBot
+        Simplifed code to reflect
+
+0.8.1
+    TECHNICAL
+        Spilt commands and rejuggled some files
+    COMMANDS
+        Added trains
+
+0.7.6
+    COMMANDS
+        extLog & log now returns kicks, bans and other info
+
+0.7.5
+    TECHNICAL
+        Flooding control fixed
+
+0.7.4
+    COMMANDS
+        Lord luna gets muffins
+        muffin probability weighted
+    TECHNICAL
+        structure of muffinMare.mufTypes changed
+        muffinMare.giveMuffin changed accordintally
+
+0.7.3
+    COMMANDS
+        NO MUFFINS FOR LORD LUNA
+    TECHNICAL
+        Ignores blanks messges
+        fixed bug in muffinMare.listEvents
+        fixed bug in muffinMare.commandHelp
+
+0.7.2
+    TECHNICAL
+        Added ircBot.timerWrapper
+        ircBot.timerWrapper thread is now stared by onConnected
+        Added ircBot.threadTimer
+        Added joining to ircBot.threadTimer in ircBot.close
+        ircBot.onTimer now returns False.
+
+0.7.1
+    COMMANDS
+        events is now restricted, can not be called publicaly any more than once per 30 seconds
+        fixed bug in muffin & spin commands
+    TECHNICAL
+        Added restCmd (Inherits from command)
+        Changed events command to a restricted Command 
+
+0.7.0
+    COMMANDS
+        Flood timers changed to 10, 5 & 0 (reg,voice,op)
+        muffin & spin now return correct capilisation
+    TECHNICAL
+        Added ircbot.VOCHARS & ircbot.VOMODES
+        Added voiced user detection
+        Added sperate flood timers for regular, voiced and op users
+            channel.flTimer (replaces channel.fTimer)
+            channel.voTimer
+            channel.opTimer
+        Changed user.allowed to factor in op/voice in flood control
+        user.allowed now returns "" when allowed and error message otherwise.
+        Added channel.getNickCase
+
+0.6.4
+    TECHNICAL
+        Fixed bug in muffinMare.listEvents
+        Corrected typo in muffinMare.listEvents
+        Added listing of today's events to muffinMare.listEvents
+        Moved paste bin api key into constant (muffinMare.PASTEBINKEY)
