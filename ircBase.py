@@ -21,7 +21,7 @@ class ircConnection():
         self.t = None
         self.sLock = threading.Lock()
         self.lFlag = threading.Event()
-        self.DEBUG = True #DEBUG
+        self.DEBUG = False #DEBUG
     
     ### Function to parse incoming messages with ###
     def parse(self,msg):
