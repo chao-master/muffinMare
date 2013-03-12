@@ -420,7 +420,7 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
                         userArg = args.pop(0)
                     else:
                         args.pop(0)
-                elif args.pop(0) == "-b" # -b: bot as user flag
+                elif args.pop(0) == "-b": # -b: bot as user flag
                     if userObj.op:
                         userArg = parent.NICK
                 elif args.pop(0) == "-c": # -c: Channel modifer flag
