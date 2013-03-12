@@ -57,12 +57,7 @@ class ircBot(ircConnection):
 		#Check nick changes and update list as requried
 		#Also detects when connected and runs onConnected
 		#JOIN PART KICK NICK MODE 353 396
-		if command == "PING": #Bot beacon
-		    pidtLog = open("pidt","w")
-            pidtLog.write(str(os.getpid()))
-            pidtLog.close()
-            os.system("top -p "+str(os.getpid()+" -b -n 1 | tail -n 1 >> webLog") #I know it's bad pratice shut up ok it's mainly a debug thing anyway
-		elif command == "JOIN":
+		if command == "JOIN":
 			if prefix[0] == self.NICK:
 				self[params[0]] = channel(self,params[0])
 				self.nickChanges("JOIN",params[0],self.NICK)

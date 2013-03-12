@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#Controller cron job for muffinMare
+if [ $((`date +%s`-`stat -c %Y ~/pyIrc/mm_build/pidt`)) -gt 500 ]
+   then kill `cat ~/pyIrc/mm_build/pidt`
+   stat -c %Y ~/pyIrc/mm_build/pidt >> ~/pyIrc/mm_build/crateLog
+fi
