@@ -4,6 +4,7 @@ import threading
 import time
 import traceback
 import re
+import os
 from ircBase import *
 
 # === Base class for ircBots ===
