@@ -121,7 +121,7 @@ class muffinMare(ircBot):
             "ponyep"    :command("ponyEp",   0,0,""  ,self.ponyEpisode ,"PONYEP Select a random episode to watch"),
             "youtube"   :command("youtube",  1,1,""  ,self.youtube     ,"YOUTUBE [Search term], Returns the first youtube seach result for the given term"),
             "flags"     :command("flags",    2,1,"uo",self.flags       ,"FLAGS [BOT|{user}#{channel}] {Flags}, OP ONLY. Used to set or retrive flags about the channel, user or bot"),
-            "echo"      :command("echo",     1,1,"o" ,self.echo        ,"Operator Command."),
+            #"echo"      :command("echo",     1,1,"o" ,self.echo        ,"Operator Command."), #TODO add echo command
             "ship"      :command("ship",     1,0,""  ,self.ship        ,"SHIP {User} Ships 2 random chat users, or ships the given user with a random user.")
         }
                 
