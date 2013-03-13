@@ -63,7 +63,7 @@ class ircBot(ircConnection):
             pidtLog = open("pidt","w")
             pidtLog.write(str(os.getpid()))
             pidtLog.close()
-            topLine = subprocess.check_output(["top","-p",os.getpid(),"-b","-n","1"]).split("\n")[-1]
+            topLine = subprocess.check_output(["top","-p "+os.getpid()+" -b -n 1"]).split("\n")[-1]
             webLog = open("webLog","a")
             webLog.write(str(time.time())+" "+topLine)
             webLog.close()
