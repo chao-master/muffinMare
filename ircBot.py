@@ -405,8 +405,8 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
         else:
             args = argStr.split(" ")
             
-        if   "c" in self.flags: replyToArg = channel
-        elif "u" in self.flags: replyToArg = user
+        if   "c" in self.flags: replyArg = channel
+        elif "u" in self.flags: replyArg = user
         else:
             if "s" in self.flags: private = not private
             if private: replyArg = user
@@ -450,7 +450,7 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
         
         #Exectute command
         try:
-            self.fun(channel,user,replyTo,*args)
+            self.fun(channel,user,replyArg,*args)
             return True
         except Exception as e:
             parent.speak("Error in command {0}: {1} - {2}".format(self.name,argStr,str(e)),user)

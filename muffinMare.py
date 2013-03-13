@@ -397,7 +397,6 @@ if len(sys.argv)>1 and sys.argv[1].lower() == "debug":
     print "---------\nSTARTING IN DEBUG MODE\n---------"
 else:   
     MAIN = muffinMare("irc.canternet.org",6669,nick="muffinMare",indent="pyBot",realName="ranByRipp_",mode="+BIix",password="865936",autoJoin="#ukofequestria")
-    
 
 MAIN.start()
 while 1:
