@@ -1,3 +1,0 @@
-#Soul.py
-#Trying to make a soul....
-pass

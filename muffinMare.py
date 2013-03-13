@@ -7,7 +7,6 @@ import urllib as ul
 import re
 import sys
 import traceback
-import soul
 import calc
 import socket
 from datetime import timedelta,datetime
