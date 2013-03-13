@@ -415,8 +415,8 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
             if private: replyArg = user
             else: replyArg = channel
             
-        userArg = ""
-        channelArg = ""
+        userArg = user
+        channelArg = channel
         while len(args) > 0:
             if args[0][0] != "-":
                 break
@@ -453,7 +453,7 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
         
         #Exectute command
         try:
-            self.fun(channel,user,replyArg,*args)
+            self.fun(userArg,channelArg,replyArg,*args)
             return True
         except Exception as e:
             parent.speak("Error in command {0}: {1} - {2}".format(self.name,argStr,str(e)),user)
