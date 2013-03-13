@@ -69,7 +69,7 @@ class ircBot(ircConnection):
             except subprocess.CalledProcessError: pass
             print "pinged"
             webLog = open("webLog","a")
-            webLog.write(str(time.time())+" "+topLine)
+            webLog.write(str(time.time())+" "+topLine+"\n")
             webLog.close()
         elif command == "JOIN":
             if prefix[0] == self.NICK:
