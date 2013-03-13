@@ -392,11 +392,11 @@ class muffinMare(ircBot):
 ### Main execution ###
 
 if len(sys.argv)>1 and sys.argv[1].lower() == "debug":
-    MAIN = muffinMare("irc.canternet.org",6669,nick="muffinMareDB",password="865936",realName="ranByRipp_",mode="+BIix",autoJoin="#mmdb")
+    MAIN = muffinMare("irc.canternet.org",6669,nick="muffinMareDB",password=sys.argv[2],realName="ranByRipp_",mode="+BIix",autoJoin="#mmdb")
     MAIN.DEBUG == 1
     print "---------\nSTARTING IN DEBUG MODE\n---------"
 else:   
-    MAIN = muffinMare("irc.canternet.org",6669,nick="muffinMare",indent="pyBot",realName="ranByRipp_",mode="+BIix",password="865936",autoJoin="#ukofequestria")
+    MAIN = muffinMare("irc.canternet.org",6669,nick="muffinMare",indent="pyBot",realName="ranByRipp_",mode="+BIix",password=sys.argv[1],autoJoin="#ukofequestria")
 
 MAIN.start()
 while 1:
