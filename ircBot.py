@@ -5,6 +5,7 @@ import time
 import traceback
 import re
 import os
+import subprocess
 from ircBase import *
 
 # === Base class for ircBots ===
@@ -62,7 +63,10 @@ class ircBot(ircConnection):
             pidtLog = open("pidt","w")
             pidtLog.write(str(os.getpid()))
             pidtLog.close()
-            os.system("top -p "+str(os.getpid())+" -b -n 1 | tail -n 1 >> webLog") #I know it's bad pratice shut up ok it's mainly a debug thing anyway
+            topLine = subprocess.check_output(["top","-p",os.getpid(),"-b","-n","1"]).split("\n")[-1]
+            webLog = open("webLog","a")
+            webLog.write(str(time.time())+" "+topLine)
+            webLog.close()
         elif command == "JOIN":
             if prefix[0] == self.NICK:
                 self[params[0]] = channel(self,params[0])
