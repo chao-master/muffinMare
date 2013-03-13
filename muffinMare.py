@@ -29,6 +29,8 @@ class muffinMare(ircBot):
         self.defMuffin = {} #TODO revamp def muffin
         self.initCommands()
         self.PASTEBINCODE = "ab5c4f6d1af4affc3bfd32aecc80f8e6" #TODO remove pastebin stuffs
+        self.COMMAND_CHAR_PRIVATE = "!"
+        self.COMMAND_CHAR_PUBLIC  = "`"
         
         messages = [ #   |            |            |            |
             ("KEEP CALM" ,"AND"       ,"EAT"       ,"MUFFINS"   ),
@@ -75,9 +77,9 @@ class muffinMare(ircBot):
             params[1] = ''.join(re.split("[\x02\x1F\x16]|(?:\x03[0-9]{0,2}(?:,[0-9]{1,2})?)",params[1])) #REMOVE CRAP
             if params[1] == "": return True #TODO return possible error?
             print "v",params[0].ljust(30)[:30], prefix[0].ljust(30)[:30], params[1] #Display on console #TODO include time
-            if params[1][0] == "!": #TODO Magic character
+            if params[1][0] == self.COMMAND_CHAR_PRIVATE:
                 self.handleCommand(params[0],prefix[0],params[1][1:],True)
-            elif params[1][0] == "`": #TODO Magic character
+            elif params[1][0] == self.COMMAND_CHAR_PUBLIC:
                 self.handleCommand(params[0],prefix[0],params[1][1:],False)
             #Random response when being addressed
             elif re.match(r"@?{0}\W".format(self.NICK),params[1]) and random.random() < 1/9 or \
@@ -121,7 +123,7 @@ class muffinMare(ircBot):
             "youtube"   :command("youtube",  1,1,""  ,self.youtube     ,"YOUTUBE [Search term], Returns the first youtube seach result for the given term"),
             "flags"     :command("flags",    2,1,"uo",self.flags       ,"FLAGS [BOT|{user}#{channel}] {Flags}, OP ONLY. Used to set or retrive flags about the channel, user or bot"),
             #"echo"      :command("echo",     1,1,"o" ,self.echo        ,"Operator Command."), #TODO add echo command
-            "ship"      :command("ship",     1,0,""  ,self.ship        ,"SHIP {User} Ships 2 random chat users, or ships the given user with a random user.")
+            "ship"      :command("ship",     1,0,""  ,self.ship        ,"SHIP {User} Ships 2 random chat users, or ships the given user with a random user.") #TODO determin how it's broken and fix
         }
                 
     def handleCommand(self,channel,user,command,private):
@@ -132,22 +134,24 @@ class muffinMare(ircBot):
         else:
             cmdName,cmdArgs = c
         cmdName = cmdName.lower()
-        if not cmdName in self.COMMANDS: #TODO BETTER TO ASK FOR FORGIVNESS THAN PERMISSION (BtaFFtP)
-            self.speak("Command {0} not found. !HELP to list commands".format(cmdName),user)
-            return
         # Execute command
-        if self.COMMANDS[cmdName](self,channel,user,private,cmdArgs) and (channel[0] == "#") and (not private):
-            self[channel][user].issuedCommand()
+        try:
+            if self.COMMANDS[cmdName](self,channel,user,private,cmdArgs) and (channel[0] == "#") and (not private):
+                self[channel][user].issuedCommand()
+        except KeyError:
+            self.speak("Command {0} not found. {1}HELP to list commands".format(cmdName,self.COMMAND_CHAR_PRIVATE),user)
+            return
+        
     #########
     ### Command functions ###
                     #########
     def commandHelp(self,channel,user,replyTo,command=None):
         if command == None:
-            self.speak("Command are prefixed with ! (private response) or ` (global response).Some commands return private response regardless. Commands are: {0}. Type !HELP [command] for more help on each command".format(', '.join(self.COMMANDS.keys()).upper(),user),replyTo)
+            self.speak("Command are prefixed with {1} (private response) or {2} (global response).Some commands return private response regardless. Commands are: {0}. Type !HELP [command] for more help on each command".format(', '.join(self.COMMANDS.keys()).upper(),self.COMMAND_CHAR_PRIVATE,self.COMMAND_CHAR_PUBLIC),replyTo)
         elif command in self.COMMANDS:
             self.speak(self.COMMANDS[command].help,replyTo)
         else:
-            self.speak("Command {0} not found. !HELP to list commands".format(command),replyTo)
+            self.speak("Command {0} not found. {1}HELP to list commands".format(cmdName,self.COMMAND_CHAR_PRIVATE),replyTo)
 
     def ship(self,channel,user,replyTo,shipee1=None):
         chanObj = self[channel]
@@ -379,10 +383,11 @@ class muffinMare(ircBot):
         except socket.error as e:
             self.speak("{0}:{1} - Error, server may be down, Error no-{2}".format(address,port,e[0]),replyTo)
     
+    #TODO update
     def ponyEpisode(self,channel,user,replyTo):
         episodes = ["S01E01 - Episode 1","S01E02 - Episode 2","S01E03 - The Ticket Master","S01E04 - Applebuck Season","S01E05 - Griffon the Brush-Off","S01E06 - Boast Busters","S01E07 - Dragonshy","S01E08 - Look Before You Sleep","S01E09 - Bridle Gossip","S01E10 - Swarm of the Century","S01E11 - Winter Wrap-Up","S01E12 - Call of the Cutie","S01E13 - Fall Weather Friends","S01E14 - Suited for Success","S01E15 - Feeling Pinkie Keen","S01E16 - Sonic Rainboom","S01E17 - Stare Master","S01E18 - The Show Stoppers","S01E19 - A Dog and Pony Show","S01E20 - Green is not your Color","S01E21 - Over a Barrel","S01E22 - A Bird in the Hoof","S01E23 - The Cutie Mark Chronicles","S01E24 - Owls well that Ends well","S01E25 - Party of One","S01E26 - The Best Night Ever","S02E01 - Return of Harmony Part 1","S02E02 - Return of Harmony Part 2","S02E03 - Lesson Zero","S02E04 - Luna Eclipsed","S02E05 - Sisterhooves Social","S02E06 - The Cutie Pox","S02E07 - May the Best Pet Win","S02E08 - The Mysterious Mare Do Well","S02E09 - Sweet and Elite","S02E10 - Secret of My Excess","S02E11 - Hearth's Warming Eve","S02E12 - Family Appreciation Day","S02E13 - Baby Cakes","S02E14 - The Last Roundup","S02E15 - The Super Speedy Cider Squeezy 6000","S02E16 - Read it and Weep","S02E17 - Hearts and Hooves day","S02E18 - A Friend In Deed","S02E19 - Putting Your Hoof Down","S02E20 - It's About Time","S02E21 - Dragon Quest","S02E22 - Hurricane Fluttershy","S02E23 - Ponyville Confidential","S02E24 - MMMystery on the Friendship Express"]
         d = random.randint(1,(len(episodes)-1))
-        self.speak("muffinMare think {0} should watch {1}".format(user,episodes[d]),replyTo)    
+        self.speak("muffinMare thinks {0} should watch {1}".format(user,episodes[d]),replyTo)    
 
 ### Main execution ###
 
