@@ -253,6 +253,7 @@ class muffinMare(ircBot):
         self.speak("The next {0}/{1} upcomming events are below, for more events check http://ukofequestria.co.uk/forums/10".format(min(3,len(rst)),len(rst)),replyTo)
         for eDate,date,title,location,link in rst[:3]:
             self.speak("{0}:{1}".format(date,title),replyTo)
+            
     def giveMuffin(self,channel,mFor,private,uFrom=None,type=None):
         if type == None:
             try:

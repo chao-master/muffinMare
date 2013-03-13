@@ -403,7 +403,7 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
             if alow != "" :
                 parent.speak("You are not allowed to issue commands becuase {0}".format(alow),user)
                 return False
-        if argStr == "" or self.argCount == 0:
+        if argStr == "":
             args = []
         else:
             args = argStr.split(" ")
@@ -418,32 +418,35 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
         userArg = user
         channelArg = channel
         while len(args) > 0:
-            if args[0][0] != "-":
+            if args[0][0] != "-": #TODO fix error: string index out of range
                 break
             else:
-                if args.pop(0) == "-":  #-: Flag, End of flags
+                poped = args.pop(0)
+                if poped == "-":  #-: Flag, End of flags
                     break
-                elif args.pop(0) == "-u": # -u: User modifier flag
+                elif poped == "-u": # -u: User modifier flag
                     if userObj.op:
                         userArg = args.pop(0)
                     else:
                         args.pop(0)
-                elif args.pop(0) == "-b": # -b: bot as user flag
+                elif poped == "-b": # -b: bot as user flag
                     if userObj.op:
                         userArg = parent.NICK
-                elif args.pop(0) == "-c": # -c: Channel modifer flag
+                elif poped == "-c": # -c: Channel modifer flag
                     if userObj.op:
                         channelArg = args.pop(0)
                     else:
                         args.pop(0)
-                elif args.pop(0) == "-r": # -r: ReplyTo Modifier flag
+                elif poped == "-r": # -r: ReplyTo Modifier flag
                     if userObj.op:
                         replyArg = args.pop(0)
                     else:
                         args.pop(0)
         
         #Reduce arguments
-        if len(args) > self.argCount:
+        if self.argCount == 0:
+            args = []
+        elif len(args) > self.argCount:
             args[self.argCount-1:]=[' '.join(map(str,args[self.argCount-1:]))]
         
         #Check length
@@ -453,7 +456,7 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
         
         #Exectute command
         try:
-            self.fun(userArg,channelArg,replyArg,*args)
+            self.fun(channelArg,userArg,replyArg,*args)
             return True
         except Exception as e:
             parent.speak("Error in command {0}: {1} - {2}".format(self.name,argStr,str(e)),user)
