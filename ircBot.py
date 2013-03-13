@@ -63,7 +63,11 @@ class ircBot(ircConnection):
             pidtLog = open("pidt","w")
             pidtLog.write(str(os.getpid()))
             pidtLog.close()
-            topLine = subprocess.check_output(["top","-p "+str(os.getpid())+" -b -n 1"]).split("\n")[-1]
+            topLine=""
+            try:
+                topLine = subprocess.check_output(["top","-p",str(os.getpid()),"-b","-n","1"]).split("\n")[-3]
+            except subprocess.CalledProcessError: pass
+            print "pinged"
             webLog = open("webLog","a")
             webLog.write(str(time.time())+" "+topLine)
             webLog.close()
