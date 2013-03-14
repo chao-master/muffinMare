@@ -124,7 +124,7 @@ _Ops = {
 _order = ['+', '-', '*', '/', '^']
 
 def _convert(s):
-    s = re.sub("\W+","",s)
+    s = re.sub(r"\s+","",s)
     #infix = re.findall(r'(?:(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+)|[a-zA-Z]+|[^a-zA-Z0-9.]'.format('|'.join(_currencies.keys())),s)
     infix = re.findall(r'(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+|[a-zA-Z]+|[^a-zA-Z0-9.]',s)
     stk = []
