@@ -16,6 +16,7 @@ class _op():
         else:
             stk[-self.ods:]=[self.ops(stk[-self.ods:])]
 
+""" #Removing to simplify
 class _unitNumber():
 	def __init__(self,s):
 		self.K	= 0
@@ -104,6 +105,7 @@ _currencies = {
 }
 _currencyTimeOut = 24*60*60*60 #1 hour
 _baseCurrency = _currencies["qg"]
+"""
 _Ops = {
     "^":	_op(2,lambda (a,b):a**b),
     "/":	_op(2,lambda (a,b):a/b),
@@ -115,13 +117,16 @@ _Ops = {
     "ln":	_op(1,lambda (a):math.log(a)),
     "e":	_op(0,lambda :math.e),
     "pi":	_op(0,lambda :math.pi),
+    "tau":  _op(0,lambda :math.pi*2),
     "interrobangpie": _op(0,lambda:complex(0,math.pi)),
     "i":	_op(0,lambda:complex(0,1))
 }
 _order = ['+', '-', '*', '/', '^']
 
 def _convert(s):
-    infix = re.findall(r'(?:(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+)|[a-zA-Z]+|[^a-zA-Z0-9.]'.format('|'.join(_currencies.keys())),s)
+    infix = re.sub("\W+","",infix)
+    #infix = re.findall(r'(?:(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+)|[a-zA-Z]+|[^a-zA-Z0-9.]'.format('|'.join(_currencies.keys())),s)
+    infix = re.findall(r'(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+|[a-zA-Z]+|[^a-zA-Z0-9.]',s)
     stk = []
     post = []
     for i in infix:
@@ -129,9 +134,9 @@ def _convert(s):
             n = float(i)
             post.append(n)
         except:
-            m = re.match(r'((?<=[^a-zA-Z0-9.])-[0-9.]+|[0-9.]+)({0})'.format('|'.join(_currencies.keys())),i)
-            if m:
-                post.append(_currencies[m.group(2)].convertFrom(int(m.group(1))))
+            #m = re.match(r'((?<=[^a-zA-Z0-9.])-[0-9.]+|[0-9.]+)({0})'.format('|'.join(_currencies.keys())),i)
+            #if m:
+            #    post.append(_currencies[m.group(2)].convertFrom(int(m.group(1))))
             if i==",":
                 pass
             elif i=="(":
