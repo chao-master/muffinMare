@@ -213,8 +213,15 @@ class channel():
                     
             
         
-    def getNickCase(self,nick):
-        return self[nick].nick
+    def getNickCase(self,nick,acceptAbsents=True):
+        try:
+            return self[nick].nick
+        except selfUserException:
+            return self.parent.NICK
+        except noUserException:
+            if acceptAbsents: return nick
+            else: raise
+            
     
     def nickHandler(self,parent,type,nick1,nick2=None):
         sent = False
@@ -417,8 +424,12 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
             
         userArg = user
         channelArg = channel
+        print args #TODO REMOVE DEBUG
         while len(args) > 0:
-            if args[0][0] != "-": #TODO fix error: string index out of range
+            if args[0] == '':
+                args.pop(0)
+                continue
+            elif args[0][0] != "-": #TODO fix error: string index out of range
                 break
             else:
                 poped = args.pop(0)
@@ -454,6 +465,7 @@ class command():    #TODO Shift to ircBase file? Or split bot functions out to s
             parent.speak("{0} requries at least {2} paramters only {1} given".format(self.name,len(args),self.req),user)
             return False
         
+        print channelArg,userArg,replyArg,args #TODO DEBUG REMOVE
         #Exectute command
         try:
             self.fun(channelArg,userArg,replyArg,*args)
