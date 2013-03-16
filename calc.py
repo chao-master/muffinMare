@@ -3,6 +3,11 @@ import math
 import time
 import urllib as ul
 
+class CalculatorError(Exception):
+    def __init__(self,msg):
+        self.msg = msg
+    def __str__(self):
+        return self.msg
 
 class _op():
     def __init__(self,ods,ops):
@@ -133,7 +138,7 @@ def _convert(s):
         try:
             n = float(i)
             post.append(n)
-        except:
+        except ValueError:
             #m = re.match(r'((?<=[^a-zA-Z0-9.])-[0-9.]+|[0-9.]+)({0})'.format('|'.join(_currencies.keys())),i)
             #if m:
             #    post.append(_currencies[m.group(2)].convertFrom(int(m.group(1))))
@@ -142,11 +147,17 @@ def _convert(s):
             elif i=="(":
                 stk.append(-1)
             elif i==")":
-                while stk[-1]!=-1:
-                    post.append(_order[stk.pop()])
-                stk.pop()
+                try:
+                    while stk[-1]!=-1:
+                        post.append(_order[stk.pop()])
+                    stk.pop()
+                except IndexError:
+                    raise CalculatorError("Too many closing brackets")
             elif re.match(r'[^a-zA-Z0-9.]',i):
-                p=_order.index(i)
+                try:
+                    p=_order.index(i)
+                except ValueError:
+                    raise CalculatorError("{0} is not an infix operation".format(i))
                 while len(stk)>0 and stk[-1]>p:
                    a=stk.pop()
                    try:
@@ -159,6 +170,7 @@ def _convert(s):
 
     while len(stk)>0:
         a=stk.pop()
+        if a == -1: raise CalculatorError("Too many opening brackets")
         try:
             post.append(_order[a])
         except TypeError:
@@ -168,10 +180,13 @@ def _convert(s):
 def _evalPost(post):
     stk = []
     for p in post:
-        try:
-            _Ops[p](stk)
-        except KeyError:
+        if isinstance(p, float)
             stk.append(p)
+        else:
+            try:
+                _Ops[p](stk)
+            except KeyError:
+                raise CalculatorError("{0} is not a defined function".format(p))
     return stk.pop()
 
 def evalInfix(s):
