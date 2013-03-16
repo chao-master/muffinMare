@@ -3,6 +3,11 @@ import math
 import time
 import urllib as ul
 
+class CalculatorError(Exception):
+    def __init__(self,msg):
+        self.msg = msg
+    def __str__(self):
+        return self.msg
 
 class _op():
     def __init__(self,ods,ops):
@@ -107,46 +112,84 @@ _currencyTimeOut = 24*60*60*60 #1 hour
 _baseCurrency = _currencies["qg"]
 """
 _Ops = {
+    #Infix operators
     "^":	_op(2,lambda (a,b):a**b),
     "/":	_op(2,lambda (a,b):a/b),
     "*":	_op(2,lambda (a,b):a*b),
     "-":	_op(2,lambda (a,b):a-b),
     "+":	_op(2,lambda (a,b):a+b),
-    "sqrt":	_op(1,lambda (a):math.sqrt(a)),
-    "log":	_op(2,lambda (a,b):math.log(a,b)),
-    "ln":	_op(1,lambda (a):math.log(a)),
+    #Number-theoretic and representation functions
+    "ceil": _op(1,math.ceil),
+    "floor":_op(1,math.floor),
+    "abs":  _op(1,math.fabs),
+    "fact": _op(1,math.factorial),
+    #Power and logarithmic functions
+    "log":	_op(2,math.log),
+    "ln":	_op(1,math.log),
+    "sqrt":	_op(1,math.sqrt),
+    #Trigonometric functions
+    "acos": _op(1,math.acos),
+    "asin": _op(1,math.asin),
+    "atan": _op(1,math.atan),
+    "atanp": _op(2,math.atan2),
+    "cos": _op(1,math.cos),
+    "sin":  _op(1,math.sin),
+    "tan": _op(1,math.tan),
+    "hypot": _op(2,math.hypot),
+    #Angular conversion
+    "deg": _op(1,math.degrees),
+    "rad": _op(1,math.radians),
+    #Hyperbolic functions
+    "acosh": _op(1,math.acosh),
+    "asinh": _op(1,math.asinh),
+    "atanh": _op(1,math.atanh),
+    "cosh": _op(1,math.cosh),
+    "sinh": _op(1,math.sinh),
+    "tanh": _op(1,math.tanh),
+    #Constants
     "e":	_op(0,lambda :math.e),
     "pi":	_op(0,lambda :math.pi),
     "tau":  _op(0,lambda :math.pi*2),
-    "interrobangpie": _op(0,lambda:complex(0,math.pi)),
-    "i":	_op(0,lambda:complex(0,1))
+    "i":	_op(0,lambda:complex(0,1)),
+    #Eastereggs
+    "interrobangpie": _op(0,lambda:complex(0,math.pi))
 }
 _order = ['+', '-', '*', '/', '^']
 
 def _convert(s):
-    s = re.sub(r"\s+","",s)
-    #infix = re.findall(r'(?:(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+)|[a-zA-Z]+|[^a-zA-Z0-9.]'.format('|'.join(_currencies.keys())),s)
-    infix = re.findall(r'(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+|[a-zA-Z]+|[^a-zA-Z0-9.]',s)
+    infix = re.findall(r'(?:(?<![a-zA-Z0-9.])-)?[0-9]+(?:\.[0-9]+)?|[a-zA-Z]+|[^a-zA-Z0-9 ]',s)
     stk = []
     post = []
     for i in infix:
         try:
             n = float(i)
             post.append(n)
-        except:
+        except ValueError:
             #m = re.match(r'((?<=[^a-zA-Z0-9.])-[0-9.]+|[0-9.]+)({0})'.format('|'.join(_currencies.keys())),i)
             #if m:
             #    post.append(_currencies[m.group(2)].convertFrom(int(m.group(1))))
             if i==",":
                 pass
+            elif i==".":
+                raise CalculatorError("Unexpected decimal point incountred".format(stk.pop()))
             elif i=="(":
                 stk.append(-1)
             elif i==")":
-                while stk[-1]!=-1:
-                    post.append(_order[stk.pop()])
-                stk.pop()
+                try:
+                    while stk[-1]!=-1:
+                        a=stk.pop()
+                        try:
+                            post.append(_order[a])
+                        except:
+                            post.append(a)
+                    stk.pop()
+                except IndexError:
+                    raise CalculatorError("Too many closing brackets")
             elif re.match(r'[^a-zA-Z0-9.]',i):
-                p=_order.index(i)
+                try:
+                    p=_order.index(i)
+                except ValueError:
+                    raise CalculatorError("{0} is not an infix operation".format(i))
                 while len(stk)>0 and stk[-1]>p:
                    a=stk.pop()
                    try:
@@ -159,6 +202,7 @@ def _convert(s):
 
     while len(stk)>0:
         a=stk.pop()
+        if a == -1: raise CalculatorError("Too many opening brackets")
         try:
             post.append(_order[a])
         except TypeError:
@@ -168,10 +212,15 @@ def _convert(s):
 def _evalPost(post):
     stk = []
     for p in post:
-        try:
-            _Ops[p](stk)
-        except KeyError:
+        if isinstance(p, float):
             stk.append(p)
+        else:
+            try:
+                _Ops[p](stk)
+            except KeyError:
+                raise CalculatorError("{0} is not a defined function".format(p))
+    if len(stk) != 1:
+        raise CalculatorError("Unexpected token {0} remaining".format(stk.pop()))
     return stk.pop()
 
 def evalInfix(s):
