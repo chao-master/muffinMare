@@ -157,8 +157,7 @@ _Ops = {
 _order = ['+', '-', '*', '/', '^']
 
 def _convert(s):
-    #infix = re.findall(r'(?:(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+)|[a-zA-Z]+|[^a-zA-Z0-9.]'.format('|'.join(_currencies.keys())),s)
-    infix = re.findall(r'(?<![a-zA-Z0-9.])-[0-9.]+|[0-9.]+|[a-zA-Z]+|[^a-zA-Z0-9. ]',s)
+    infix = re.findall(r'(?:(?<![a-zA-Z0-9.])-)?[0-9]+(?:\.[0-9]+)?|[a-zA-Z]+|[^a-zA-Z0-9 ]',s)
     stk = []
     post = []
     for i in infix:
@@ -171,6 +170,8 @@ def _convert(s):
             #    post.append(_currencies[m.group(2)].convertFrom(int(m.group(1))))
             if i==",":
                 pass
+            elif i==".":
+                raise CalculatorError("Unexpected decimal point incountred".format(stk.pop()))
             elif i=="(":
                 stk.append(-1)
             elif i==")":
@@ -218,6 +219,8 @@ def _evalPost(post):
                 _Ops[p](stk)
             except KeyError:
                 raise CalculatorError("{0} is not a defined function".format(p))
+    if len(stk) != 1:
+        raise CalculatorError("Unexpected token {0} remaining".format(stk.pop()))
     return stk.pop()
 
 def evalInfix(s):
