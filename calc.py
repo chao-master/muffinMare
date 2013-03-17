@@ -16,8 +16,6 @@ class _op():
     def __call__(self,stk):
         if self.ods == 0:
             stk.append(self.ops())
-        elif self.ods == 1:
-            stk[-1] = self.ops(stk[-1])
         else:
             stk[-self.ods:]=[self.ops(stk[-self.ods:])]
 
@@ -124,14 +122,14 @@ _Ops = {
     "abs":  _op(1,math.fabs),
     "fact": _op(1,math.factorial),
     #Power and logarithmic functions
-    "log":	_op(2,math.log),
+    "log":	_op(2,lambda (a,b):math.log(a,b)),
     "ln":	_op(1,math.log),
     "sqrt":	_op(1,math.sqrt),
     #Trigonometric functions
     "acos": _op(1,math.acos),
     "asin": _op(1,math.asin),
     "atan": _op(1,math.atan),
-    "atanp": _op(2,math.atan2),
+    "atanp": _op(2,lambda (a,b):math.atan2(a,b)),
     "cos": _op(1,math.cos),
     "sin":  _op(1,math.sin),
     "tan": _op(1,math.tan),
