@@ -16,6 +16,8 @@ class _op():
     def __call__(self,stk):
         if self.ods == 0:
             stk.append(self.ops())
+        elif self.ods == 1:
+            stk[-1]=self.ops(stk[-1])
         else:
             stk[-self.ods:]=[self.ops(stk[-self.ods:])]
 
