@@ -160,7 +160,7 @@ class muffinMare(ircBot):
             shipee1 = chanObj.getNickCase(shipee1)
         shipee2 = random.choice(self[channel]._userList.keys())
         shipee2 = chanObj.getNickCase(shipee2)
-        self.speak("{0} Ships {1} and {2}",user,shipee1,shipee2)
+        self.speak("{0} Ships {1} and {2}",user,shipee1,shipee2,replyTo)
             
     def flags (self,channel,user,replyTo,apply,flags=None):
         if apply == "bot":
@@ -369,7 +369,7 @@ class muffinMare(ircBot):
         self.speak("Trains for {0} to {1} on {2}: {3}".format(sFrom,sTo,oDate,url),replyTo)
     
     #TODO multi thread web/socket request
-    def mcServCheck(self,channel,user,replyTo,ad="mc.ukofequestria.co.uk:25565"):
+    def mcServCheck(self,channel,user,replyTo,ad="mcsrv.ukofequestria.co.uk:25565"):
         ad = ad.split(":")
         address = ad[0]
         if len(ad)>1 : port = ad[1]
