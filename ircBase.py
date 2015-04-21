@@ -95,11 +95,15 @@ class ircConnection():
     ### PING commands are handled at this level
     def listen(self,r):
         buff= ""
-        while not r.lFlag.is_set():
+        looping = True
+        while looping:
             try:
                 buff= ""
-                while (buff[-2:] != "\r\n") and not self.lFlag.is_set():
-                    buff = buff + r.s.recv(1024)
+                while (buff[-2:] != "\r\n"):
+                    newData = r.s.recv(1024)
+                    if not newData:
+                        looping = False
+                    buff = buff + newData
                 for line in buff.split("\r\n"):
                     if line != "":
                         prefix,command,params = r.parse(line)
